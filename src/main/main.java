@@ -94,53 +94,58 @@ public class main {
                 
              
             case 2:
-                System.out.print("Enter Email: ");
-                String logEmail = sc.next();
-                System.out.print("Enter Password: ");
-                String logPass = sc.next();
-                
-                String hashPass = db.hashPassword(logPass);
-                while(true){
-                    
+                int attempt = 3;
+                boolean loggedIn = false;
+
+                while (attempt > 0 && !loggedIn) {
+                    System.out.print("Enter Email: ");
+                    String logEmail = sc.next();
+                    System.out.print("Enter Password: ");
+                    String logPass = sc.next();
+
+                    String hashPass = db.hashPassword(logPass); 
+
                     String qry = "SELECT * FROM account_tbl WHERE a_email = ? AND a_pass = ?";
                     java.util.List<java.util.Map<String, Object>> result = db.fetchRecords(qry, logEmail, hashPass);
-                    
-                    if(result.isEmpty()){
-                        System.out.println("INVALID CREDENTIALS");
-                        break;
-                    }else{
+
+                    if (result.isEmpty()) {
+                        attempt--;
+                        if (attempt == 0) {
+                            System.out.println("Attempt Limit Reached! Access denied.");
+                        } else if (attempt == 1) {
+                            System.out.println("INVALID CREDENTIALS. You have 1 attempt left.");
+                        } else {
+                            System.out.println("INVALID CREDENTIALS. You have " + attempt + " attempts left.");
+                        }
+                    } else {
                         java.util.Map<String, Object> user = result.get(0);
                         int petOwnerId = Integer.parseInt(user.get("a_id").toString());
                         int clientId = Integer.parseInt(user.get("a_id").toString());
                         String stat = user.get("a_status").toString();
                         String type = user.get("a_type").toString();
-                        if(stat.equalsIgnoreCase("Pending")){
-                                    System.out.println("Account is Pending, Contact the Admin!");
-                                    break;
-                                }else{
-                                    System.out.println("LOGIN SUCCESS!");
-                                   
-                                    if(type.equals("Admin")){
-                                                Admin admin = new Admin();
-                                                admin.admin();
-                                                     
-                                    }else if(type.equalsIgnoreCase("Client")){
-                                        Client client = new Client();
-                                        client.client(clientId, petOwnerId);
-    
-                                    }else if(type.equalsIgnoreCase("Veterinarian")){
-                                        Veterinarian veterinarian = new Veterinarian();
-                                        veterinarian.veterinarian();
-                                        
-                                    }else{
-                                        
-                                        
-                                    }
-                                    break;
-                                }
+
+                        if (stat.equalsIgnoreCase("Pending")) {
+                            System.out.println("Account is Pending, Contact the Admin!");
+                        } else {
+                            System.out.println("LOGIN SUCCESS!");
+                            loggedIn = true; 
+
+                            if (type.equalsIgnoreCase("Admin")) {
+                                Admin admin = new Admin();
+                                admin.admin();
+                            } else if (type.equalsIgnoreCase("Client")) {
+                                Client client = new Client();
+                                client.client(clientId, petOwnerId);
+                            } else if (type.equalsIgnoreCase("Veterinarian")) {
+                                Veterinarian veterinarian = new Veterinarian();
+                                veterinarian.veterinarian();
+                            }
+                        }
                     }
                 }
-            break;
+    break;
+
+
             case 3:
                 System.exit(0);
                     break;
@@ -152,8 +157,16 @@ public class main {
     
      
         }
+        while (true) {
             System.out.print("Do you want to continue? (Y/N): ");
-            cont = sc.next().charAt(0);
+            String input = sc.next();
+            if (input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("N")) {
+                cont = input.charAt(0);
+                break; 
+            } else {
+                System.out.println("Invalid input! Please enter Y or N.");
+            }
+        }
             
     }while (cont == 'Y' || cont == 'y');
         

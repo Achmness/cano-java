@@ -82,6 +82,8 @@ public class Client {
         int pchoice;
         int achoice;
         int id;
+        int pid;
+        int aid;
         
         do{
             System.out.println("WELCOME TO CLIENT DASHBOARD");
@@ -100,7 +102,7 @@ public class Client {
                     }
                     choice = sc.nextInt();
 
-                    if (choice >= 1 && choice <= 3) {
+                    if (choice >= 1 && choice <= 4) {
                         break; 
                     } else {
                         System.out.println("Invalid input. Choose between 1-3.");
@@ -160,6 +162,81 @@ public class Client {
                         case 2:
                             Client.viewPetInformation(petOwnerId);
                         break;
+                        case 3:
+                            Client.viewPetInformation(petOwnerId);
+                            java.util.List<java.util.Map<String, Object>> pets = db.fetchRecords(
+                                        "SELECT p_id FROM pet WHERE p_owner_id = ?", petOwnerId
+                                    );
+                            java.util.Set<Integer> validIds = new java.util.HashSet<>();
+                                    for (java.util.Map<String, Object> pett : pets) {
+                                        validIds.add(Integer.parseInt(pett.get("p_id").toString()));
+                                    }
+
+                                    if (validIds.isEmpty()) {
+                                        System.out.println("You have no pet information to update.");
+                                        break;
+                                    }
+                                System.out.print("Enter ID to update: ");
+                                while (true) {
+                                    if (!sc.hasNextInt()) {
+                                        System.out.print("Invalid input! Please enter a number only: ");
+                                        sc.next(); 
+                                        continue;
+                                    }
+                                    pid = sc.nextInt();
+                                    
+                                    if(validIds.contains(pid)){
+                                        break;
+                                    }else{
+                                        System.out.print("Invalid ID! Please enter one of your pet IDs: ");
+                                    }
+                                    
+                                }            
+                                System.out.print("Enter New Age: ");
+                                int nAge = sc.nextInt();
+                                System.out.print("Enter New Weight: ");
+                                float nWeight = sc.nextFloat();
+                                
+                                String sqlUpdate = "UPDATE pet SET p_age = ?, p_weight = ? WHERE p_id = ?";
+                                db.updateRecord(sqlUpdate, nAge, nWeight, pid);
+                                System.out.println("Appointment updated successfully!");
+                            
+                        break;
+                        case 4:
+                            Client.viewPetInformation(petOwnerId);
+                            java.util.List<java.util.Map<String, Object>> petss = db.fetchRecords(
+                                        "SELECT p_id FROM pet WHERE p_owner_id = ?", petOwnerId
+                                    );
+                            java.util.Set<Integer> validIdds = new java.util.HashSet<>();
+                                    for (java.util.Map<String, Object> pettt : petss) {
+                                        validIdds.add(Integer.parseInt(pettt.get("p_id").toString()));
+                                    }
+
+                                    if (validIdds.isEmpty()) {
+                                        System.out.println("You have no pet information to delete.");
+                                        break;
+                                    }
+                                System.out.print("Enter ID to update: ");
+                                while (true) {
+                                    if (!sc.hasNextInt()) {
+                                        System.out.print("Invalid input! Please enter a number only: ");
+                                        sc.next(); 
+                                        continue;
+                                    }
+                                    pid = sc.nextInt();
+                                    
+                                    if(validIdds.contains(pid)){
+                                        break;
+                                    }else{
+                                        System.out.print("Invalid ID! Please enter one of your pet IDs: ");
+                                    }
+                                    
+                                }            
+                                
+                                String sqlDelete = "DELETE FROM pet WHERE p_id = ?";
+                                db.deleteRecord(sqlDelete, pid);
+                                System.out.println("Pet Information Deleted successfully!");
+                            break;
                         
                     }
                 }while(pchoice != 5);    
@@ -174,7 +251,7 @@ public class Client {
                         while (true) {
                             System.out.print("Enter Pet Id: ");
                             if (!sc.hasNextInt()) {
-                                System.out.println("Invalid input! Please enter a number only.");
+                                System.out.print("Invalid input! Please enter a number only: ");
                                 sc.next();
                                 continue;
                             }
@@ -183,7 +260,7 @@ public class Client {
                             if (petIds.contains(petId)) {
                                 break; 
                             } else {
-                                System.out.println("Invalid Pet ID! Please enter one from the list above.");
+                                System.out.print("Invalid Pet ID! Please enter one from the list above: ");
                             }
                         }
 
@@ -207,7 +284,7 @@ public class Client {
                 case 3:
                 do{    
                     System.out.println("1. Reschedule an Appointment");    
-                    System.out.println("2. Cancel an Appointment");
+                    System.out.println("2. Delete an Appointment");
                     System.out.println("3. View Details & Confirmation");
                     System.out.println("4. Exit");
                         while (true) {
@@ -246,7 +323,7 @@ public class Client {
                                 System.out.print("Enter ID to update: ");
                                 while (true) {
                                     if (!sc.hasNextInt()) {
-                                        System.out.println("Invalid input! Please enter a number only.");
+                                        System.out.print("Invalid input! Please enter a number only: ");
                                         sc.next(); 
                                         continue;
                                     }
@@ -255,7 +332,7 @@ public class Client {
                                     if(validIds.contains(id)){
                                         break;
                                     }else{
-                                        System.out.println("Invalid ID! Please enter one of your appointment IDs.");
+                                        System.out.print("Invalid ID! Please enter one of your appointment IDs: ");
                                     }
                                     
                                 }            
@@ -268,6 +345,41 @@ public class Client {
                                 db.updateRecord(sqlUpdate, nDate, nTime, id);
                                 System.out.println("Appointment updated successfully!");
  
+                            break;
+                            case 2: 
+                                Client.viewAppointmentsForClient(clientId);
+                            java.util.List<java.util.Map<String, Object>> appoint = db.fetchRecords(
+                                        "SELECT a_id FROM appointment WHERE a_client_id = ?", clientId
+                                    );
+                            java.util.Set<Integer> validIdds = new java.util.HashSet<>();
+                                    for (java.util.Map<String, Object> apps : appoint) {
+                                        validIdds.add(Integer.parseInt(apps.get("a_id").toString()));
+                                    }
+
+                                    if (validIdds.isEmpty()) {
+                                        System.out.println("You have no Appointment to delete.");
+                                        break;
+                                    }
+                                System.out.print("Enter ID to Delete: ");
+                                while (true) {
+                                    if (!sc.hasNextInt()) {
+                                        System.out.print("Invalid input! Please enter a number only: ");
+                                        sc.next(); 
+                                        continue;
+                                    }
+                                    aid = sc.nextInt();
+                                    
+                                    if(validIdds.contains(aid)){
+                                        break;
+                                    }else{
+                                        System.out.print("Invalid ID! Please enter one of your pet IDs: ");
+                                    }
+                                    
+                                }            
+                                
+                                String sqlDelete = "DELETE FROM appointment WHERE a_id = ?";
+                                db.deleteRecord(sqlDelete, aid);
+                                System.out.println("Appointment Deleted successfully!");
                             break;
                             case 3:
                                     Client.viewAppointmentsForClient(clientId);    
