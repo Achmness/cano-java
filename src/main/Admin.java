@@ -22,13 +22,17 @@ public class Admin {
     public void admin(){
         
         do{
-            System.out.println("WELCOME TO ADMIN DASHBOARD");
-            System.out.println("1. View Users");
-            System.out.println("2. Approve Accounts");
-            System.out.println("3. Delete Accounts");
-            System.out.println("4. Exit");
+            System.out.println("|=======================================|");
+            System.out.println("|          🐾 ADMIN DASHBOARD 🐾          |");
+            System.out.println("|=======================================|");
+            System.out.println("|  1. View Users                        |");
+            System.out.println("|  2. Approve Accounts                  |");
+            System.out.println("|  3. Delete Accounts                   |");
+            System.out.println("|  4. Log Out                           |");
+            System.out.println("|=======================================|");
+
                 while (true) {
-                    System.out.print("Enter Choice (1-3): ");
+                    System.out.print("Enter Choice (1-4): ");
 
                     if (!sc.hasNextInt()) {
                         System.out.println("Invalid input! Please enter a number only.");

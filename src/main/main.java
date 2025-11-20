@@ -19,10 +19,15 @@ public class main {
         
         
     do{    
-        System.out.println("Main Menu");
-        System.out.println("1. Register Account");
-        System.out.println("2. Login Account");
-        System.out.println("3. Exit");
+        System.out.println("|=======================================|");
+        System.out.println("|         🐶 VETERINARY SYSTEM 🐱         |");
+        System.out.println("|=======================================|");
+        System.out.println("|  1. Register Account                  |");
+        System.out.println("|  2. Login Account                     |");
+        System.out.println("|  3. Exit                              |");
+        System.out.println("|=======================================|");
+        System.out.print("Enter choice: ");
+
             while (true) {
                 System.out.print("Enter Choice (1-3): ");
 
@@ -61,7 +66,7 @@ public class main {
                     }
                     int utype = 0;
                     while(true) {
-                        System.out.print("Enter User Type (1 - Client/ 2 - Veterinarian): ");
+                        System.out.print("Enter User Type (1 - Client, 2 - Veterinarian & 3 - Admin): ");
                         if (!sc.hasNextInt()) {
                             System.out.println("Invalid input! Please enter a number only.");
                             sc.next(); 
@@ -69,7 +74,7 @@ public class main {
                         }
                         utype = sc.nextInt();
                         
-                        if(utype >= 1 && utype <= 2){
+                        if(utype >= 1 && utype <= 3){
                             break; 
                         } else {
                             System.out.println("Invalid input. Choose between 1-2.");
@@ -80,8 +85,10 @@ public class main {
                     String tp = "";
                     if(utype == 1){
                         tp = "Client";
-                    }else{
+                    }else if(utype == 2){
                         tp = "Veterinarian";
+                    }else{
+                        tp = "Admin";
                     }
                     
                     System.out.print("Enter Password: ");
